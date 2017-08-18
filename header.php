@@ -1,0 +1,17 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<title><?php echo $pageTitle?></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="assets/css/jquery.mobile-1.4.5.min.css" />
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.mobile-1.4.5.min.js"></script>
+	</head>
+
+	<body>
+		<div data-role="page" id="index">
+			<div data-role="header">
+				<!--
+				<img src="assets\img\gbanner7.jpg" width="100%"-->
+				<h1>SI Kelulusan SMA 6</h1>				
+			</div>
