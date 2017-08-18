@@ -83,6 +83,18 @@
         public function getLastError(){
             return $this->error;
         }
+
+        function readPerKelas($id_kelas){
+            $query = "SELECT *
+                    FROM siswa
+                    WHERE id_kelas = ?";
+     
+            $stmt = $this->conn->prepare( $query );
+            $stmt->bindParam(1, $id_kelas);
+            $stmt->execute();
+     
+            return $stmt;
+        }
     }
 
 ?>

@@ -19,13 +19,13 @@ CREATE TABLE `siswa` (
 
 CREATE TABLE `matpelpil` (
   `id_matpelpil` int NOT NULL,
-  `nama_matpelpil` varchar(30) NOT NULL,
+  `nama_matpelpil` varchar(30) NOT NULL UNIQUE,
   PRIMARY KEY (`id_matpelpil`)
 ) ENGINE=MyISAM;
 
 CREATE TABLE `kelas` (
 	`id_kelas` int NOT NULL auto_increment,
-	`nama_kelas` varchar(10),
+	`nama_kelas` varchar(10) UNIQUE,
 	PRIMARY KEY (`id_kelas`)
 ) ENGINE=MyISAM;
 
