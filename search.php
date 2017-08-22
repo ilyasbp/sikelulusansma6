@@ -1,15 +1,30 @@
 <?php
-	$pageTitle="Cari Nilai";
-	include_once "header.php";
-	include_once "navbar.php";
+    session_start();
 	include_once 'config/database.php';
-	include_once 'objects/siswa.php';
-	include_once 'objects/matpelpil.php';
+	include_once 'objects/admin.php';
 
 	$database = new Database();
 	$db = $database->getConnection();
+
+	$admin = new Admin($db);
+
+	$pageTitle="Cari Nilai";
+	include_once "header.php";
+	include_once 'objects/siswa.php';
+	include_once 'objects/matpel.php';
+	include_once 'objects/nilai.php';
+
+	if($admin->is_loggedin()){
+		include_once "navbar_login.php";
+    }
+	else{
+		include_once "navbar.php";
+	}
+
+	$lulus=true;
 	$siswa = new Siswa($db);
-	$matpelpil = new Matpelpil($db);
+	$matpel = new Matpel($db);
+	$nilai = new Nilai($db);
 ?>
 
 <div id=index role="main" class="ui-content">
@@ -26,15 +41,18 @@
 				if($num>0){
 					echo'<table data-role="table" id="tablenilai" class="ui-body-d ui-shadow table-stripe ui-responsive">';
 						echo'<thead>';
-							echo'<tr>';
-								echo'<th>NIS</th>';
-								echo'<th>Nama</th>';
-								echo'<th>B Indonesia</th>';
-								echo'<th>B Inggris</th>';
-								echo'<th>Matematika</th>';
-								echo'<th>Pilihan</th>';
-								echo'<th>Nilai</th>';
-							echo'</tr>';
+							echo'<tr>
+											<th>NIS</th>
+											<th>Nama</th>
+									';
+
+							$stmt_matpel = $matpel->read();
+							while($row_matpel = $stmt_matpel->fetch(PDO::FETCH_ASSOC)){
+								echo'		<th>'.$row_matpel["nama_matpel"].'</th>';
+							}
+							echo 	' <th>Pilihan</th>
+										<th>Ket</th>
+											</tr>';
 						echo'</thead>';
 						echo'<tbody>';
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -42,12 +60,21 @@
 
 		        					echo '<tr>';
 										echo '<td>'.$nis.'</td>';
-										echo '<td>'.$nama.'</td>';
-										echo '<td>'.$bin.'</td>';
-										echo '<td>'.$big.'</td>';
-										echo '<td>'.$mat.'</td>';
-										echo '<td>'.$matpelpil->readName($id_matpelpil).'</td>';
-										echo '<td>'.$nilpelpil.'</td>';
+										echo '<td>'.$nama_siswa.'</td>';
+										$stmt_nilai = $nilai->read($nis);
+									while($row_nilai = $stmt_nilai->fetch(PDO::FETCH_ASSOC)){
+										echo'<td>'.$row_nilai['jumlah'].'</td>';
+										if ($row_nilai['jumlah']<75) $lulus=false;
+									}
+										echo '<td>'.$matpel->readName($id_matpelpil).'</td>';
+
+										if($lulus){
+											echo '<td>Lulus<td$>';
+										}
+										else{
+											echo '<td>Tidak Lulus<td>';
+										}
+
 		        					echo '</tr>';
 								}
 						echo'</tbody>';

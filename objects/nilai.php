@@ -1,5 +1,5 @@
 <?php
-    class Siswa
+    class Nilai
     {
         private $conn;
 
@@ -8,14 +8,13 @@
             $this->conn = $db;
         }
 
-        public function create($nis, $nama, $id_kelas, $id_matpelpil)
+        public function create($nis, $id_matpel, $jumlah)
         {
-            $query = "INSERT INTO siswa(nis, nama_siswa, id_kelas, id_matpelpil) VALUES(?, ?, ?, ?)";
+            $query = "INSERT INTO nilai(nis, id_matpel, jumlah) VALUES(?, ?, ?)";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(1, $nis);
-            $stmt->bindParam(2, $nama);
-            $stmt->bindParam(3, $id_kelas);
-            $stmt->bindParam(4, $id_matpelpil);
+            $stmt->bindParam(2, $id_matpel);
+            $stmt->bindParam(3, $jumlah);
             
             if($stmt->execute()){
                 return true;
@@ -25,14 +24,13 @@
             }
         }
 
-        function update($nis, $nama, $id_kelas, $id_matpelpil){
-            $query = "UPDATE siswa SET nama_siswa = ?, id_kelas = ?, id_matpelpil = ? WHERE nis = ?";
+        function update($nis, $id_matpel, $jumlah){
+            $query = "UPDATE nilai SET jumlah = ? WHERE nis = ? AND id_matpel=?";
      
             $stmt = $this->conn->prepare( $query );
-            $stmt->bindParam(1, $nama);
-            $stmt->bindParam(2, $id_kelas);
-            $stmt->bindParam(3, $id_matpelpil);
-            $stmt->bindParam(4, $nis);
+            $stmt->bindParam(1, $jumlah);
+            $stmt->bindParam(2, $nis);
+            $stmt->bindParam(3, $id_matpel);
             
             if($stmt->execute()){
                 return true;
@@ -43,7 +41,7 @@
         }
 
         function delete($nis){
-            $query = "DELETE FROM siswa WHERE nis = :nis";
+            $query = "DELETE FROM nilai WHERE nis = :nis";
      
             $stmt = $this->conn->prepare( $query );
             $stmt->bindParam(":nis", $nis);
@@ -56,30 +54,22 @@
             }
         }
 
-        function read(){
-	        $query = "SELECT * FROM siswa ORDER BY nis";
-	 
+        function read($nis){
+	        $query = "SELECT * FROM nilai WHERE nis = ? ORDER BY id_matpel";
+	       
 	        $stmt = $this->conn->prepare( $query );
+            $stmt->bindParam(1, $nis);
 	        $stmt->execute();
 	 
 	        return $stmt;
    		}
 
-        function readOne($nis){
-            $query = "SELECT * FROM siswa WHERE nis = ?";
+        function readOne($nis, $id_matpel){
+            $query = "SELECT * FROM nilai WHERE nis = ? AND id_matpel = ?";
      
             $stmt = $this->conn->prepare( $query );
             $stmt->bindParam(1, $nis);
-            $stmt->execute();
-     
-            return $stmt;
-        }
-
-        function readPerKelas($id_kelas){
-            $query = "SELECT * FROM siswa WHERE id_kelas = ?";
-     
-            $stmt = $this->conn->prepare( $query );
-            $stmt->bindParam(1, $id_kelas);
+            $stmt->bindParam(2, $id_matpel);
             $stmt->execute();
      
             return $stmt;

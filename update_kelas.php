@@ -1,4 +1,5 @@
 <?php
+	include_once 'session.php';
 	$pageTitle="Update Kelas";
 	include_once "header.php";
 	include_once "navbar_login.php";
@@ -29,6 +30,18 @@
 				<label for="nama">Nama Kelas:</label>
 				<?php
 					echo '<input type="text" name="nama" value="'.$nama_kelas.'">';
+					echo '<label for="jurusan">Jurusan:</label>';
+					echo '<select data-native-menu="false" name="jurusan">
+								<option>Pilih Jurusan</option>';
+								if($jurusan==1){
+						            	echo '<option value="1" selected>IPA</option>';
+						            	echo '<option value="2">IPS</option>';
+						            }
+						        else if($jurusan==2){
+						            	echo '<option value="1">IPA</option>';
+						            	echo '<option value="2" selected>IPS</option>';
+						            }
+					echo '		</select>';
 					echo '<input type="hidden" name="id" value="'.$id_kelas.'">';
 				?>
 				<button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-a" name="kelas">Submit</button>

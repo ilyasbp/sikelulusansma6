@@ -1,22 +1,19 @@
 <?php
     class Kelas
     {
+        private $conn;
 
-        private $conn; //Menyimpan Koneksi database
-        private $error; //Menyimpan Error Message
-
-        // Contructor untuk class lab, membutuhkan satu parameter yaitu koneksi ke databse
         public function __construct($db)
         {
             $this->conn = $db;
         }
 
-        // Registrasi lab baru
-        public function create($nama)
+        public function create($nama, $jurusan)
         {
-            $query = "INSERT INTO kelas(nama_kelas) VALUES(?)";
+            $query = "INSERT INTO kelas(nama_kelas, jurusan) VALUES(?, ?)";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(1, $nama);
+            $stmt->bindParam(2, $jurusan);
 
             if($stmt->execute()){
                 return true;
@@ -27,10 +24,7 @@
         }
 
         function read(){
-        	//select all data
-	        $query = "SELECT *
-	                FROM kelas
-	                ORDER BY nama_kelas";
+	        $query = "SELECT * FROM kelas ORDER BY nama_kelas";
 	 
 	        $stmt = $this->conn->prepare( $query );
 	        $stmt->execute();
@@ -39,10 +33,7 @@
    		}
 
         function readOne($id_kelas){
-            //select all data
-            $query = "SELECT *
-                    FROM kelas
-                    WHERE id_kelas = ?";
+            $query = "SELECT * FROM kelas WHERE id_kelas = ?";
      
             $stmt = $this->conn->prepare( $query );
             $stmt->bindParam(1, $id_kelas);
@@ -66,13 +57,14 @@
             }
         }
 
-        function update($id_kelas, $nama_kelas){
+        function update($id_kelas, $nama_kelas, $jurusan){
             
-            $query = "UPDATE kelas SET nama_kelas = ? WHERE id_kelas = ?";
+            $query = "UPDATE kelas SET nama_kelas = ?, jurusan = ? WHERE id_kelas = ?";
      
             $stmt = $this->conn->prepare( $query );
             $stmt->bindParam(1, $nama_kelas);
-            $stmt->bindParam(2, $id_kelas);
+            $stmt->bindParam(2, $jurusan);
+            $stmt->bindParam(3, $id_kelas);
             
             if($stmt->execute()){
                 return true;
@@ -80,11 +72,6 @@
             else{
                 return false;
             }
-        }
-
-        // Ambil error terakhir yg disimpan di variable error
-        public function getLastError(){
-            return $this->error;
         }
     }
 

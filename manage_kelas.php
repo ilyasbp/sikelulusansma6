@@ -1,4 +1,5 @@
 <?php
+	include_once 'session.php';
 	$pageTitle="Kelola Kelas";
 	include_once "header.php";
 	include_once "navbar_login.php";

@@ -7,6 +7,16 @@
 		<link rel="icon" href="assets/img/sman 6.ico">
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/jquery.mobile-1.4.5.min.js"></script>
+		<style>
+		    .left-margin {
+		      margin:0 .5em 0 0;
+		    }
+
+		    .right-button-margin {
+		      margin: 0 0 1em 0;
+		      overflow: hidden;
+		    }
+		  </style>
 	</head>
 
 	<body>

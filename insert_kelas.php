@@ -1,4 +1,5 @@
 <?php
+	include_once 'session.php';
 	$pageTitle="Kelola Kelas";
 	include_once "header.php";
 	include_once "navbar_login.php";
@@ -21,6 +22,12 @@
 			<form method="post" action="crud/insert_data.php">
 				<label for="nama">Nama Kelas:</label>
 				<input type="text" name="nama" placeholder="contoh: XII-MIA 1">
+				<label for="jurusan">Jurusan:</label>
+				<select data-native-menu="false" name="jurusan">
+					<option>Pilih Jurusan</option>
+					<option value="1">IPA</option>
+					<option value="2">IPS</option>
+				</select>
 				<button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-a" name="kelas">Submit</button>
 			</form>
 		</div>

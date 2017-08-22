@@ -1,15 +1,29 @@
 <?php
-	$pageTitle="Daftar Nilai";
-	include_once "header.php";
-	include_once "navbar.php";
+    session_start();
 	include_once 'config/database.php';
-	include_once 'objects/siswa.php';
-	include_once 'objects/matpelpil.php';
+	include_once 'objects/admin.php';
 
 	$database = new Database();
 	$db = $database->getConnection();
+
+	$admin = new Admin($db);
+
+	$pageTitle="Daftar Nilai";
+	include_once "header.php";
+	include_once 'objects/siswa.php';
+	include_once 'objects/nilai.php';
+	include_once 'objects/kelas.php';
+
+	if($admin->is_loggedin()){
+		include_once "navbar_login.php";
+    }
+	else{
+		include_once "navbar.php";
+	}
+	
 	$siswa = new Siswa($db);
-	$matpelpil = new Matpelpil($db);
+	$kelas = new Kelas($db);
+	$nilai = new Nilai($db);
 ?>
 
 	<div id=list role="main" class="ui-content">
@@ -20,11 +34,8 @@
 					<tr>
 						<th>NIS</th>
 						<th>Nama</th>
-						<th>B Indonesia</th>
-						<th>B Inggris</th>
-						<th>Matematika</th>
-						<th>Pilihan</th>
-						<th>Nilai</th>
+						<th>Kelas</th>
+						<th>Keterangan</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -32,15 +43,21 @@
 						$stmt = $siswa->read();
 						while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 							extract($row);
+							$lulus="Lulus";
+
+							$stmt_kelas = $kelas->readOne($id_kelas);
+							$row_kelas = $stmt_kelas->fetch(PDO::FETCH_ASSOC);
+
+							$stmt_nilai = $nilai->read($nis);
+							while ($row_nilai = $stmt_nilai->fetch(PDO::FETCH_ASSOC)){
+								if($row_nilai["jumlah"]<75) $lulus="Tidak Lulus";
+							}
 
         					echo '<tr>';
 								echo '<td>'.$nis.'</td>';
-								echo '<td>'.$nama.'</td>';
-								echo '<td>'.$bin.'</td>';
-								echo '<td>'.$big.'</td>';
-								echo '<td>'.$mat.'</td>';
-								echo '<td>'.$matpelpil->readName($id_matpelpil).'</td>';
-								echo '<td>'.$nilpelpil.'</td>';
+								echo '<td>'.$nama_siswa.'</td>';
+								echo '<td>'.$row_kelas['nama_kelas'].'</td>';
+								echo '<td>'.$lulus.'</td>';
         					echo '</tr>';
 						}
 					?>

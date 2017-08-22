@@ -1,17 +1,25 @@
 <?php
+	include_once 'session.php';
+	include_once 'config/database.php';
+	include_once 'objects/admin.php';
+
 	$pageTitle="Kelola Nilai";
 	include_once "header.php";
 	include_once "navbar_login.php";
-	include_once 'config/database.php';
+	
 	include_once 'objects/siswa.php';
-	include_once 'objects/matpelpil.php';
+	include_once 'objects/matpel.php';
 	include_once 'objects/kelas.php';
+	include_once 'objects/nilai.php';
 
-	$selected_kelas = 1;
+
 	$database = new Database();
 	$db = $database->getConnection();
+
+	$selected_kelas = 1;
 	$siswa = new Siswa($db);
-	$matpelpil = new Matpelpil($db);
+	$matpel = new Matpel($db);
+	$nilai = new Nilai($db);
 	$kelas = new Kelas($db);
 
 
@@ -52,16 +60,19 @@
 						$stmt = $siswa->readPerKelas($selected_kelas);
 						$num = $stmt->rowCount();
 						if($num>0){
-							echo '
+							echo 	'
 									<thead>
 										<tr>
 											<th>NIS</th>
 											<th>Nama</th>
-											<th>B Indonesia</th>
-											<th>B Inggris</th>
-											<th>Matematika</th>
-											<th>Pilihan</th>
-											<th>Nilai</th>
+									';
+
+							$stmt_matpel = $matpel->read();
+							while($row_matpel = $stmt_matpel->fetch(PDO::FETCH_ASSOC)){
+								echo'		<th>'.$row_matpel["nama_matpel"].'</th>';
+							}
+							echo 	' 		<th>Pilihan</th>
+											<th>Ket</th>
 											<th>Kelola</th>
 											<th></th>
 										</tr>
@@ -71,15 +82,22 @@
 							while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 								extract($row);
 
+								$lulus = true;
+
 	        					echo   	'<tr>
 	        								<td>'.$nis.'</td>
-											<td>'.$nama.'</td>
-											<td>'.$bin.'</td>
-											<td>'.$big.'</td>
-											<td>'.$mat.'</td>
-											<td>'.$matpelpil->readName($id_matpelpil).'</td>
-											<td>'.$nilpelpil.'</td>
-											<td><a href="update_nilai.php?id='.$nis.'" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Edit</a></td>
+											<td>'.$nama_siswa.'</td>
+										';
+
+									$stmt_nilai = $nilai->read($nis);
+									while($row_nilai = $stmt_nilai->fetch(PDO::FETCH_ASSOC)){
+										echo'<td>'.$row_nilai['jumlah'].'</td>';
+										if($row_nilai['jumlah']<75) $lulus=false;
+									}
+
+								echo 	'	<td>'.$matpel->readName($id_matpelpil).'</td>';
+									if($lulus) echo '<td>Lulus</td>'; else echo '<td>Tidak Lulus</td>';		
+								echo 	'	<td><a href="update_nilai.php?id='.$nis.'" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Edit</a></td>
 											<td>
 												<a href="#popupDialog?id='.$nis.'" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Delete</a>
 
